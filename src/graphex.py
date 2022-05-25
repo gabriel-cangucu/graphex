@@ -4,7 +4,7 @@ class Graph():
         '''
         Our graph is a dictionary of tuples, in which each node 'u' points to
         a list of tuples in the form (v, w), where 'v' is a node and 'w' is the
-        the wight of the edge (u, v)
+        the weight of the edge (u, v)
         '''
         self._G = dict()
 
@@ -13,7 +13,7 @@ class Graph():
 
 
     def get_nodes(self) -> list:
-        return self._G.keys()
+        return list(self._G.keys())
     
 
     def get_edges(self) -> list:
@@ -49,7 +49,8 @@ class Graph():
             nodes = [nodes]
 
         for node in nodes:
-            self._G[node] = []
+            if node not in self.get_nodes():
+                self._G[node] = []
     
 
     def add_edges(self, edges) -> None:
@@ -72,7 +73,8 @@ class Graph():
             
             # If (u, v) is already in the graph, we override its weight
             if (u, v) in self.get_edges():
-                self.update_weight((u, v), w)
+                if self._weighted:
+                    self.update_weight((u, v), w)        
                 break
             
             # Node 'u' is added do the graph if not existent
@@ -94,8 +96,42 @@ class Graph():
             if node == v:
                 self._G[u][i] = (node, weight)
         
-        # Updating the weight for both (u, v) and (v, u) if directed
+        # Updating the weight for both (u, v) and (v, u) if not directed
         if not self._directed:
             for i, (node, _) in enumerate(self.get_adjacency_list(v)):
                 if node == u:
                     self._G[v][i] = (node, weight)
+
+
+    def remove_nodes(self, nodes):
+        # If only one node is provided, we turn it into a list
+        if not isinstance(nodes, list):
+            nodes = [nodes]
+        
+        for node in nodes:
+            if node not in self.get_nodes():
+                raise KeyError('{} is not a node of the graph'.format(node))
+            else:
+                del self._G[node]
+    
+    
+    def remove_edges(self, edges):
+        # If only one edge is provided, we turn it into a list
+        if not isinstance(edges, list):
+            edges = [edges]
+        
+        for edge in edges:
+            u, v = edge
+
+            if edge not in self.get_edges():
+                raise KeyError('Edge {} is not in the graph'.format((u, v)))
+            
+            for node, weight in self.get_adjacency_list(u):
+                if node == v:
+                    self._G[u].remove((node, weight))
+            
+            # Removing both (u, v) and (v, u) if not directed
+            if not self._directed:
+                for node, weight in self.get_adjacency_list(v):
+                    if node == u:
+                        self._G[v].remove((node, weight))

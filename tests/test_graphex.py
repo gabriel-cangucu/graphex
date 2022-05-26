@@ -237,6 +237,88 @@ class TestGraphex(unittest.TestCase):
     def test_turning_directed_graph_into_undirected(self):
         pass
 
+    def test_breadth_first_search_with_no_nodes(self):
+        with self.assertRaises(KeyError) as context:
+            _ = self.G.breadth_first_search(goal="A")
+        
+        self.assertTrue('Graph has no nodes' in str(context.exception))
+
+    def test_breadth_first_search_with_no_edges(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        
+        with self.assertRaises(KeyError) as context:
+            _ = self.G.breadth_first_search(goal="A")
+        
+        self.assertTrue('Graph has no edges' in str(context.exception))
+
+
+    def test_breadth_first_search_with_result_in_first_node(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found = self.G.breadth_first_search(goal="A", get_path=False)
+
+        self.assertTrue(found)
+
+    def test_breadth_first_search_with_path(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found, path  = self.G.breadth_first_search(start="D", goal="B")
+
+        self.assertTrue(found)
+        self.assertTrue(path == ['D', 'M', 'C', 'L', 'R', 'P', 'T', 'S', 'B'])
+
+    def test_breadth_first_search_with_no_path(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found = self.G.breadth_first_search(start="D", goal="B", get_path=False)
+
+        self.assertTrue(found)
+
+    def test_breadth_first_search_with_no_start(self):
+        self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found = self.G.breadth_first_search(goal="B", get_path=False)
+
+        self.assertTrue(found)
+
+    def test_breadth_first_search_with_path_and_no_start(self):
+        self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found, path  = self.G.breadth_first_search(goal="B")
+
+        self.assertTrue(found)
+        self.assertTrue(path == ['D', 'M', 'C', 'L', 'R', 'P', 'T', 'S', 'B'])
+
+    def test_breadth_first_search_no_result(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found = self.G.breadth_first_search(start="D", goal="H", get_path=False)
+
+        self.assertFalse(found)
+
+    def test_breadth_first_search_no_result_with_path(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found, path = self.G.breadth_first_search(start="D", goal="H")
+
+        self.assertFalse(found)
+        self.assertTrue(path == [])
+
+
 
 if __name__ == '__main__':
     unittest.main()

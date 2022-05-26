@@ -135,3 +135,37 @@ class Graph():
                 for node, weight in self.get_adjacency_list(v):
                     if node == u:
                         self._G[v].remove((node, weight))
+
+    def breadth_first_search(self, goal, start=None, get_path=True):
+        if len(self.get_nodes()) == 0:
+            raise KeyError('Graph has no nodes')
+
+        if len(self.get_edges()) == 0:
+            raise KeyError('Graph has no edges')
+
+        if start == None:
+            start=self.get_nodes()[0][0]
+
+        visited = []
+        queue = []
+
+        queue.append(start)
+
+        while len(queue) > 0:
+            node = queue.pop(0)
+
+            visited.append(node)
+
+            if node == goal:
+                if get_path:
+                    return (True, visited)
+                return True
+
+            for neighbor in self.get_adjacency_list(node):
+                if neighbor[0] not in visited and neighbor[0] not in queue:
+                    queue.append(neighbor[0])
+
+        if get_path:
+            return (False, [])
+        return False
+

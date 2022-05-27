@@ -240,13 +240,13 @@ class TestGraphex(unittest.TestCase):
     ## Algoritms tests 
     # BFS
 
-    def test_breadth_first_search_with_no_nodes(self):
+    def test_BFS_with_no_nodes(self):
         with self.assertRaises(KeyError) as context:
             _ = self.G.breadth_first_search(goal="A")
         
         self.assertTrue('Graph has no nodes' in str(context.exception))
 
-    def test_breadth_first_search_with_no_edges(self):
+    def test_BFS_with_no_edges(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         
         with self.assertRaises(KeyError) as context:
@@ -255,7 +255,7 @@ class TestGraphex(unittest.TestCase):
         self.assertTrue('Graph has no edges' in str(context.exception))
 
 
-    def test_breadth_first_search_with_result_in_first_node(self):
+    def test_BFS_with_result_in_first_node(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -264,7 +264,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertTrue(found)
 
-    def test_breadth_first_search_with_path(self):
+    def test_BFS_with_path(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -274,7 +274,7 @@ class TestGraphex(unittest.TestCase):
         self.assertTrue(found)
         self.assertTrue(path == ['D', 'M', 'C', 'L', 'R', 'P', 'T', 'S', 'B'])
 
-    def test_breadth_first_search_with_no_path(self):
+    def test_BFS_with_no_path(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -283,7 +283,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertTrue(found)
 
-    def test_breadth_first_search_with_no_start(self):
+    def test_BFS_with_no_start(self):
         self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -292,7 +292,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertTrue(found)
 
-    def test_breadth_first_search_with_path_and_no_start(self):
+    def test_BFS_with_path_and_no_start(self):
         self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -302,7 +302,7 @@ class TestGraphex(unittest.TestCase):
         self.assertTrue(found)
         self.assertTrue(path == ['D', 'M', 'C', 'L', 'R', 'P', 'T', 'S', 'B'])
 
-    def test_breadth_first_search_no_result(self):
+    def test_BFS_no_result(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -311,7 +311,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertFalse(found)
 
-    def test_breadth_first_search_no_result_with_path(self):
+    def test_BFS_no_result_with_path(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -323,13 +323,13 @@ class TestGraphex(unittest.TestCase):
 
     # DFS
 
-    def test_depth_first_search_with_no_nodes(self):
+    def test_DFS_with_no_nodes(self):
         with self.assertRaises(KeyError) as context:
             _ = self.G.depth_first_search(goal="A")
         
         self.assertTrue('Graph has no nodes' in str(context.exception))
 
-    def test_depth_first_search_with_no_edges(self):
+    def test_DFS_with_no_edges(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         
         with self.assertRaises(KeyError) as context:
@@ -337,7 +337,7 @@ class TestGraphex(unittest.TestCase):
         
         self.assertTrue('Graph has no edges' in str(context.exception))
 
-    def test_depth_first_search_with_result_in_first_node(self):
+    def test_DFS_with_result_in_first_node(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -346,7 +346,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertTrue(found)
 
-    def test_depth_first_search_with_path(self):
+    def test_DFS_with_path(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -356,7 +356,7 @@ class TestGraphex(unittest.TestCase):
         self.assertTrue(found)
         self.assertTrue(path == ['D', 'C', 'P', 'B'])
 
-    def test_depth_first_search_with_no_path(self):
+    def test_DFS_with_no_path(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -365,7 +365,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertTrue(found)
 
-    def test_depth_first_search_with_no_start(self):
+    def test_DFS_with_no_start(self):
         self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -374,7 +374,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertTrue(found)
 
-    def test_depth_first_search_with_path_and_no_start(self):
+    def test_DFS_with_path_and_no_start(self):
         self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -385,7 +385,7 @@ class TestGraphex(unittest.TestCase):
         self.assertTrue(path == ['D', 'C', 'P', 'B'])
 
 
-    def test_depth_first_search_no_result(self):
+    def test_DFS_no_result(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
@@ -394,7 +394,7 @@ class TestGraphex(unittest.TestCase):
 
         self.assertFalse(found)
 
-    def test_depth_first_search_no_result_with_path(self):
+    def test_DFS_no_result_with_path(self):
         self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
         self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
                           ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])

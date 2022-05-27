@@ -113,6 +113,10 @@ class Graph():
                 raise KeyError('{} is not a node of the graph'.format(node))
             else:
                 del self._G[node]
+                for edge in self.get_edges():
+                    if(node in edge):
+                        self.remove_edges(edge)
+
     
     
     def remove_edges(self, edges):
@@ -169,3 +173,34 @@ class Graph():
             return (False, [])
         return False
 
+    def depth_first_search(self, goal, start=None, get_path=True):
+        if len(self.get_nodes()) == 0:
+            raise KeyError('Graph has no nodes')
+
+        if len(self.get_edges()) == 0:
+            raise KeyError('Graph has no edges')
+
+        if start == None:
+            start=self.get_nodes()[0][0]
+
+        stack = []
+        stack.append(start)
+        visited = []
+
+        while len(stack) > 0:
+            node = stack.pop()
+
+            visited.append(node)
+
+            if node == goal:
+                if get_path:
+                    return (True, visited)
+                return True
+
+            for neighbor in self.get_adjacency_list(node):
+                if neighbor[0] not in visited and neighbor[0] not in stack:
+                    stack.append(neighbor[0])
+
+        if get_path:
+            return (False, [])
+        return False

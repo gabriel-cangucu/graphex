@@ -204,3 +204,32 @@ class Graph():
         if get_path:
             return (False, [])
         return False
+
+    def uniform_cost_search(self, goal, start=None):
+        if len(self.get_nodes()) == 0:
+            raise KeyError('Graph has no nodes')
+
+        if len(self.get_edges()) == 0:
+            raise KeyError('Graph has no edges')
+
+        if start == None:
+            start=self.get_nodes()[0][0]
+
+        queue = []
+        visited = {}
+        queue.append([0, start])
+
+        while (len(queue) > 0):
+
+            queue = sorted(queue)
+            node = queue[0]
+            del queue[0]
+            if (node[1] == goal):
+                answer = node[0]
+                return (True, answer)
+            if (node[1] not in visited):
+                for new_node in self.get_adjacency_list(node[1]):
+                    queue.append([(node[0] + int(new_node[1])), new_node[0]])
+            visited[node[1]] = 1
+
+        return (False, [])

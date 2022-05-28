@@ -404,5 +404,47 @@ class TestGraphex(unittest.TestCase):
         self.assertFalse(found)
         self.assertTrue(path == [])
 
+     # UCS
+
+    def test_UCS_with_no_nodes(self):
+        with self.assertRaises(KeyError) as context:
+            _ = self.G.uniform_cost_search(goal="A")
+        
+        self.assertTrue('Graph has no nodes' in str(context.exception))
+     
+    def test_UCS_no_edges(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        
+        with self.assertRaises(KeyError) as context:
+            _ = self.G.uniform_cost_search(goal="A")
+        
+        self.assertTrue('Graph has no edges' in str(context.exception))
+    
+    def test_UCS_with_result_in_first_node(self):
+        self.G.add_nodes(["A", "T", "L", "M", "D", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found = self.G.uniform_cost_search(goal="A")
+
+        self.assertTrue(found)
+    
+    def test_UCS_with_no_start(self):
+        self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found = self.G.uniform_cost_search(goal="B")
+
+        self.assertTrue(found)
+        self.assertEqual(found[1], 3)
+
+    def test_UCS_with_weighted_edges(self):
+        self.weighted_G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.weighted_G.add_edges([("A", "T", "118"), ("T", "L", "111"), ("M", "L", "70"), ("M", "D", "75"), ("D", "C", "120"), ("C", "R", "146"), ("C", "P", "138"),
+                          ("R", "S", "80"), ("A", "S", "140"), ("S", "F", "99"), ("R", "P", "97"), ("P", "B", "101"), ("B", "G", "90"), ("F", "B", "211")])
+
+        found = self.weighted_G.uniform_cost_search(goal="B")
+        self.assertEqual(found[1], (120+138+101))
 if __name__ == '__main__':
     unittest.main()

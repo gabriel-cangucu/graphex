@@ -38,7 +38,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install pytest
-          python -m pip install unittest
           python -m pip install coverage
           
       - name: Test with pytest
@@ -47,5 +46,5 @@ jobs:
       
       - name: Test coverage
         run: |
-          coverage run -m unitttest
+          coverage run -m pytest
           coverage report -m

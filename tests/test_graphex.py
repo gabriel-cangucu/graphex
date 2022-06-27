@@ -446,5 +446,76 @@ class TestGraphex(unittest.TestCase):
 
         found = self.weighted_G.uniform_cost_search(goal="B")
         self.assertEqual(found[1], (120+138+101))
+
+    # INTEGRATIONS TESTS
+    
+    def test_path_with_and_without_edge(self):
+        self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        found_with_edge = self.G.breadth_first_search(start="S", goal="R")
+        self.G.remove_edges([("S", "R")])
+        found_without_edge = self.G.depth_first_search(start="S", goal="R")
+
+        self.assertNotEqual(found_with_edge, found_without_edge)
+    
+    def test_disconnect_graph(self):
+        self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        (found_with_edge, _) = self.G.uniform_cost_search(start="S", goal="G")
+        self.G.remove_edges([("B", "G")])
+        (found_without_edge, _) = self.G.depth_first_search(start="S", goal="G")
+
+        self.assertEqual(found_with_edge, (not found_without_edge))
+
+    def test_adding_weight_to_edge(self):
+        self.weighted_G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.weighted_G.add_edges([("A", "T", "118"), ("T", "L", "111"), ("M", "L", "70"), ("M", "D", "75"), ("D", "C", "120"), ("C", "R", "146"), ("C", "P", "138"),
+                          ("R", "S", "80"), ("A", "S", "140"), ("S", "F", "99"), ("R", "P", "97"), ("P", "B", "101"), ("B", "G", "90"), ("F", "B", "211")])
+        
+        (_, found_weight) = self.weighted_G.uniform_cost_search(goal="B")
+        self.weighted_G.update_weight(("C", "P"), 99999999)
+        (_, found_updated_weight) = self.weighted_G.uniform_cost_search(goal="B")
+
+        self.assertEqual(found_updated_weight, (found_weight - 138 + 146 + 97))
+        # With adding weight to the C-P edge the best path becomes D-C-R-P-B instead of D-C-P-B
+
+    
+    def test_removing_edge_adds_weight(self):
+        self.weighted_G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.weighted_G.add_edges([("A", "T", "118"), ("T", "L", "111"), ("M", "L", "70"), ("M", "D", "75"), ("D", "C", "120"), ("C", "R", "146"), ("C", "P", "138"),
+                          ("R", "S", "80"), ("A", "S", "140"), ("S", "F", "99"), ("R", "P", "97"), ("P", "B", "101"), ("B", "G", "90"), ("F", "B", "211")])
+        
+        (_, found_weight) = self.weighted_G.uniform_cost_search(goal="B")
+        self.weighted_G.remove_edges([("C", "P"), ("C", "R")])
+        (_, found_updated_weight) = self.weighted_G.uniform_cost_search(goal="B")
+
+        self.assertLess(found_weight, found_updated_weight)
+    
+    def test_errors_removing_all_edges(self):
+        self.G.add_nodes(["D", "A", "T", "L", "M", "C", "S", "R", "F", "P", "B", "G"])
+        self.G.add_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+        self.G.remove_edges([("A", "T"), ("T", "L"), ("M", "L"), ("M", "D"), ("D", "C"), ("C", "R"), ("C", "P"),
+                          ("R", "S"), ("A", "S"), ("S", "F"), ("R", "P"), ("P", "B"), ("B", "G"), ("F", "B")])
+
+        with self.assertRaises(KeyError) as context:
+            _ = self.G.uniform_cost_search(goal="A")
+        
+        self.assertTrue('Graph has no edges' in str(context.exception))
+
+        with self.assertRaises(KeyError) as context:
+            _ = self.G.depth_first_search(goal="A")
+        
+        self.assertTrue('Graph has no edges' in str(context.exception))
+
+        with self.assertRaises(KeyError) as context:
+            _ = self.G.breadth_first_search(goal="A")
+        
+        self.assertTrue('Graph has no edges' in str(context.exception))
+
 if __name__ == '__main__':
     unittest.main()
